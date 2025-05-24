@@ -40,6 +40,28 @@ const getLetterBank = (LETTER_POOL)=> {
   }
   return letterBank
 }
+const setFreqOfLettersInHand = (hand) => {
+  const freqOfLettersInHand = {};
+  for(let ch of hand){
+    if(Object.hasOwn(hand, ch)){
+      freqOfLettersInHand[ch]+=1;
+    }else{
+      freqOfLettersInHand[ch]=1 ; 
+    }
+  };
+  return freqOfLettersInHand;
+}
+
+const getFreqOfLetter = (letter, hand) => {
+  let freq = 0
+  for(let char of hand){
+    if(char===letter){
+      freq+=1
+    }
+  }
+  return freq
+}
+
 export const drawLetters = () => {
   const NUM_OF_LETTERS_ALLOWED = 10
   let letterBank = getLetterBank(LETTER_POOL);
@@ -56,7 +78,19 @@ export const drawLetters = () => {
 };
 
 export const usesAvailableLetters = (input, lettersInHand) => {
-  // Implement this method for wave 2
+  const freq = setFreqOfLettersInHand(lettersInHand); 
+  let idx = 0
+
+  while(idx < input.length){
+    const letterNotInHand = lettersInHand.includes(input[idx]);
+    const countLetter = getFreqOfLetter(input[idx], input);
+    if(countLetter > freq[input[idx]] || !letterNotInHand){
+      return false;
+    }
+    idx++;
+  }
+
+  return true
 };
 
 export const scoreWord = (word) => {
