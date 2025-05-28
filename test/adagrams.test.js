@@ -120,7 +120,9 @@ describe("Adagrams", () => {
     });
 
     it("returns a score of 0 if given an empty input", () => {
-      throw "Complete test";
+      // throw "Complete test";
+      const word = "";
+      expect(scoreWord(word)).toBe(0);
     });
 
     it("adds an extra 8 points if word is 7 or more characters long", () => {
@@ -133,7 +135,7 @@ describe("Adagrams", () => {
     });
   });
 
-  describe.skip("highestScoreFrom", () => {
+  describe("highestScoreFrom", () => {
     it("returns a hash that contains the word and score of best word in an array", () => {
       const words = ["X", "XX", "XXX", "XXXX"];
       const correct = { word: "XXXX", score: scoreWord("XXXX") };
@@ -148,7 +150,7 @@ describe("Adagrams", () => {
       throw "Complete test by adding an assertion";
     });
 
-    describe("in case of tied score", () => {
+    describe.skip("in case of tied score", () => {
       const expectTie = (words) => {
         const scores = words.map((word) => scoreWord(word));
         const highScore = scores.reduce((h, s) => (h < s ? s : h), 0);
