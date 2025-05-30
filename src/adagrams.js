@@ -143,13 +143,11 @@ export const highestScoreFrom = (words) => {
   let bestWord = ''
   let highestScoresAndBestWords = [];
 
-  // Create object where key is word and value is score
   const wordsAndScores = words.reduce((acc, word) => {
     acc[word] = scoreWord(word);
     return acc
   }, {});
 
-  // Compare each word's score to the highest score
   for(const [word, score] of Object.entries(wordsAndScores)){
     if(score >= highestScore){
       highestScore = score;
@@ -170,6 +168,7 @@ const checkForTie = (words) => {
   let bestWord = '';
   let highestScore = 0;
   const spreadWords = [...words];
+  
   // Use spread operator on words and sort from langest to shortest
   spreadWords.sort((wordA, wordB) => wordB.length - wordA.length);
 
