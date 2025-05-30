@@ -139,6 +139,56 @@ export const scoreWord = (word) => {
 };
 
 export const highestScoreFrom = (words) => {
-  // Implement this method for wave 4
-  
+  let highestScore = 0;
+  let bestWord = ''
+  let highestScoresAndBestWords = [];
+
+  // Create object where key is word and value is score
+  const wordsAndScores = words.reduce((acc, word) => {
+    acc[word] = scoreWord(word);
+    return acc
+  }, {});
+
+  // Compare each word's score to the highest score
+  for(const [word, score] of Object.entries(wordsAndScores)){
+    if(score >= highestScore){
+      highestScore = score;
+      bestWord = word
+      highestScoresAndBestWords.push(wordsAndScores[word])
+    }
+  }
+
+  // // Check for tie
+  // if(highestScoresAndBestWords.length > 1){
+  //   [bestWord, highestScore] = checkForTie(highestScoresAndBestWords)
+  // }
+
+  return {'word': bestWord, 'score': highestScore}
 };
+
+const checkForTie = (words) => {
+  let bestWord = '';
+  let highestScore = 0;
+  const spreadWords = [...words];
+  // Use spread operator on words and sort from langest to shortest
+  spreadWords.sort((wordA, wordB) => wordB.length - wordA.length);
+
+  // Loop through spreadWords
+  for(let idx = 0; idx < spreadWords.length; idx++){
+    const longestWord = spreadWords[0];
+    if(longestWord < 10){
+      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
+      return [bestWord, highestScore];
+    } else if(longestWord > 10){
+      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
+      return [bestWord, highestScore];
+    } else{
+      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
+      return [bestWord, highestScore];
+    }
+  }
+
+  // if the length of the first word is greater than 10, set it's values to best word and highest score
+
+  // return [bestWord, highestScore]
+}
