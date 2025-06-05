@@ -30,7 +30,7 @@ const LETTER_POOL = {
 const getRandomIdx = () => {
   const NUM_OF_LETTERS_IN_LETTER_BANK = 96
   return Math.floor(Math.random() * NUM_OF_LETTERS_IN_LETTER_BANK)
-}
+};
 
 const getLetterBank = (LETTER_POOL)=> {
   let letterBank = []
@@ -39,7 +39,7 @@ const getLetterBank = (LETTER_POOL)=> {
 	    letterBank.push(...letter.repeat(freq).split(''))
   }
   return letterBank
-}
+};
 const setFreqOfLettersInHand = (hand) => {
   const freqOfLettersInHand = {};
   for(let ch of hand){
@@ -50,7 +50,7 @@ const setFreqOfLettersInHand = (hand) => {
     }
   };
   return freqOfLettersInHand;
-}
+};
 
 const getFreqOfLetter = (letter, hand) => {
   let freq = 0
@@ -60,7 +60,7 @@ const getFreqOfLetter = (letter, hand) => {
     }
   }
   return freq
-}
+};
 
 export const drawLetters = () => {
   const NUM_OF_LETTERS_ALLOWED = 10
@@ -139,55 +139,43 @@ export const scoreWord = (word) => {
 };
 
 export const highestScoreFrom = (words) => {
-  let highestScore = 0;
-  let bestWord = ''
-  let highestScoresAndBestWords = [];
-
   const wordsAndScores = words.reduce((acc, word) => {
     acc[word] = scoreWord(word);
     return acc
   }, {});
 
-  for(const [word, score] of Object.entries(wordsAndScores)){
-    if(score >= highestScore){
-      highestScore = score;
-      bestWord = word
-      highestScoresAndBestWords.push(wordsAndScores[word])
+  let bestScore = 0;
+  let bestWord = ''
+  let bestWords = [];
+
+  for(const [word, score] of Object.entries(wordsAndScores)){ // {'X':8,'XX':16,'XXX':32...}
+    if(score === bestScore || bestScore === 0){
+      bestScore = score
+      bestWords.push(word);
+    } else if(score > bestScore){
+      bestScore = score
+      bestWords[0] = word    
     }
   }
 
-  // // Check for tie
-  // if(highestScoresAndBestWords.length > 1){
-  //   [bestWord, highestScore] = checkForTie(highestScoresAndBestWords)
-  // }
+  bestWord = bestWords.length > 1 ? checkForTie(bestWords) : bestWords[0]  
 
-  return {'word': bestWord, 'score': highestScore}
+  return {'word': bestWord, 'score': bestScore}
 };
 
 const checkForTie = (words) => {
-  let bestWord = '';
-  let highestScore = 0;
+  let winningWord;
+
   const spreadWords = [...words];
-  
-  // Use spread operator on words and sort from langest to shortest
   spreadWords.sort((wordA, wordB) => wordB.length - wordA.length);
 
-  // Loop through spreadWords
-  for(let idx = 0; idx < spreadWords.length; idx++){
-    const longestWord = spreadWords[0];
-    if(longestWord < 10){
-      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
-      return [bestWord, highestScore];
-    } else if(longestWord > 10){
-      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
-      return [bestWord, highestScore];
-    } else{
-      bestWord, highestScore = spreadWords[idx].word, spreadWords[idx].score;
-      return [bestWord, highestScore];
-    }
+  if(spreadWords[0].length < 10){
+    winningWord = spreadWords[spreadWords.length - 1];
+  } else{
+    winningWord = spreadWords[0];
   }
 
-  // if the length of the first word is greater than 10, set it's values to best word and highest score
+  return winningWord;
+  };
 
-  // return [bestWord, highestScore]
-}
+
