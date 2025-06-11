@@ -27,8 +27,8 @@ const LETTER_POOL = {
   Z: 1,
 };
 
-const getRandomIdx = () => {
-  const NUM_OF_LETTERS_IN_LETTER_BANK = 96
+const getRandomIdx = (letterBank) => {
+  const NUM_OF_LETTERS_IN_LETTER_BANK = letterBank.length
   return Math.floor(Math.random() * NUM_OF_LETTERS_IN_LETTER_BANK)
 };
 
