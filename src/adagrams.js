@@ -27,26 +27,35 @@ const LETTER_POOL = {
   Z: 1,
 };
 
-const getRandomIdx = () => {
-  const NUM_OF_LETTERS_IN_LETTER_BANK = 96
+const getRandomIdx = (letterBank) => {
+  const NUM_OF_LETTERS_IN_LETTER_BANK = letterBank.length
   return Math.floor(Math.random() * NUM_OF_LETTERS_IN_LETTER_BANK)
 };
 
-const getLetterBank = (LETTER_POOL)=> {
-  let letterBank = []
-  for(let letter in LETTER_POOL){
-    const freq = LETTER_POOL[letter]
-	    letterBank.push(...letter.repeat(freq).split(''))
+const getLetterBank = (LETTER_POOL) => {
+  const letterBank = []
+  for (const [letter, value] of Object.entries(LETTER_POOL)){
+      for (let i = 0; i < value.qty; i++){
+        letterBank.push(letter);
+      }
   }
   return letterBank
 };
+
+/**
+ * There's a bug in this method: Object.hasOwn(hand, ch) returns false when the object freqOfLettersInHand has a letter in it that should increment by 1.
+ * I'd expect freqOfLettersInHand to be {D: 1, O: 1, G: 1, X: 7}, but if you see in my screenshot X's value is 1.
+
+hasOwn is not working as you intended.
+ * 
+ */
 const setFreqOfLettersInHand = (hand) => {
   const freqOfLettersInHand = {};
-  for(let ch of hand){
+  for (const ch of hand){
     if(Object.hasOwn(hand, ch)){
-      freqOfLettersInHand[ch]+=1;
+      freqOfLettersInHand[ch] += 1;
     }else{
-      freqOfLettersInHand[ch]=1 ; 
+      freqOfLettersInHand[ch] = 1 ; 
     }
   };
   return freqOfLettersInHand;
@@ -54,8 +63,8 @@ const setFreqOfLettersInHand = (hand) => {
 
 const getFreqOfLetter = (letter, hand) => {
   let freq = 0
-  for(let char of hand){
-    if(char===letter){
+  for (const char of hand){
+    if(char === letter){
       freq+=1
     }
   }
@@ -67,9 +76,9 @@ export const drawLetters = () => {
   let letterBank = getLetterBank(LETTER_POOL);
   let hand = [];
 
-  while(hand.length < NUM_OF_LETTERS_ALLOWED){
-    let randIdx = getRandomIdx();
-    if(letterBank[randIdx] !== null){
+  while (hand.length < NUM_OF_LETTERS_ALLOWED){
+    let randIdx = getRandomIdx(letterBank);
+    if (letterBank[randIdx] !== null){
         hand.push(letterBank[randIdx]);
         letterBank[randIdx] = null;
     }
@@ -81,10 +90,10 @@ export const usesAvailableLetters = (input, lettersInHand) => {
   const freq = setFreqOfLettersInHand(lettersInHand); 
   let idx = 0
 
-  while(idx < input.length){
+  while (idx < input.length){
     const letterNotInHand = lettersInHand.includes(input[idx]);
     const countLetter = getFreqOfLetter(input[idx], input);
-    if(countLetter > freq[input[idx]] || !letterNotInHand){
+    if (countLetter > freq[input[idx]] || !letterNotInHand){
       return false;
     }
     idx++;
@@ -125,11 +134,11 @@ export const scoreWord = (word) => {
   };
   let score = 0;
 
-  if(word === ''){
+  if (word === ''){
     return score;
   }
 
-  for(const letter of word){
+  for (const letter of word){
     score += POINT_VALUES[letter.toUpperCase()];
   }
 
@@ -148,11 +157,11 @@ export const highestScoreFrom = (words) => {
   let bestWord = ''
   let bestWords = [];
 
-  for(const [word, score] of Object.entries(wordsAndScores)){ // {'X':8,'XX':16,'XXX':32...}
-    if(score === bestScore || bestScore === 0){
+  for (const [word, score] of Object.entries(wordsAndScores)){ 
+    if (score === bestScore || bestScore === 0){
       bestScore = score
       bestWords.push(word);
-    } else if(score > bestScore){
+    } else if (score > bestScore){
       bestScore = score
       bestWords[0] = word    
     }
@@ -169,13 +178,13 @@ const checkForTie = (words) => {
   const spreadWords = [...words];
   spreadWords.sort((wordA, wordB) => wordB.length - wordA.length);
 
-  if(spreadWords[0].length < 10){
+  if (spreadWords[0].length < 10) {
     winningWord = spreadWords[spreadWords.length - 1];
-  } else{
+  } else {
     winningWord = spreadWords[0];
   }
 
   return winningWord;
-  };
+};
 
 
